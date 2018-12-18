@@ -49,3 +49,67 @@ struct
 		
 		let rec param_couleurs n = try (param_couleur_bis n) with
 				| Failure "nombre trop grand" -> print_string ("Nombre Incorrect -> Saisir un nombre entre 0 et 6 :\n"); let i= read_int() in param_couleurs i;;
+
+
+(*let liste_code_possible n lcoul = if (n=2) then (code2 lcoul) else if (n=3) then (code3 lcoul) else (code4 lcoul);; *)
+
+
+		let make_liste n = 
+			let rec aux acc n = match (n+1) with
+				|0->acc
+				|_-> aux (n::acc) (n-1) in aux [] n;;
+
+		let combi l = 
+			let res = List.fold_left (fun acc x -> List.fold_left (fun acc y -> (x,y) :: acc) acc l) [] l in List.rev res;;
+
+
+		let liste_reponse n = List.filter (fun (b,c)->(b+c)=n) (combi(make_liste n));;
+
+
+		let bonne_rep c1 c2 = List.filter (fun (a,b) -> a=b ) (List.combine c1 c2);;
+
+		let mauvaise_rep c1 c2 = List.filter (fun (a,b) -> a<>b) (List.combine c1 c2);;
+
+		let reponse_tot c1 c2 = try (Some (List.length (bonne_rep (c1 : t) (c2 : t)),List.length (mauvaise_rep (c1 : t) (c2 : t)))) with
+		| Invalid_argument "List.combine" -> None;;
+
+
+		let tuple_to_string a = match a with
+			|Some((b,c)) -> ((string_of_int b)^" bien place, "^(string_of_int c)^" mauvais pion. ")
+			|None -> "";;
+
+		let reponse_correcte n = function
+			|Some((m,0)) when m=(n+0) -> true
+			|_-> false;;
+
+
+
+		
+	
+		let rec saisie couleur_possible tailleCode = print_string("Entrer une proposition de code : "); 
+		let s=read_line () in let codeEntre=(code_of_string s couleur_possible) in 
+		if ((codeEntre)=None) then (print_string("Saisie incorrecte (Tout écrire en minuscule ou couleurs non définies) : "); saisie couleur_possible tailleCode)
+ 		else if ((List.length (code_of_string_bis s))>tailleCode)  then (print_string("Saisie incorrecte (Code trop grand) : "); saisie couleur_possible tailleCode)
+		else if ((List.length (code_of_string_bis s))<tailleCode) then (print_string("Saisie incorrecte (Code trop petit) : "); saisie couleur_possible tailleCode)
+		else List.rev (code_of_string_bis s);;
+
+
+	let decision_final tentativeMax tailleCode couleur_possible codeSecret =   
+try
+	Sys.command "clear";	
+	let rappel = ref "\n" in 
+	for i = 0 to (tentativeMax-1) do
+		let entree = saisie couleur_possible tailleCode in entree ;
+		rappel := !rappel^"\n"^(string_of_code entree); 		
+	match (reponse_correcte tailleCode (reponse_tot codeSecret entree)) with
+			|true -> raise Exit
+			|false -> print_string ( "Mauvaise réponse -> "^(tuple_to_string (reponse_tot codeSecret entree)));
+		Sys.command "clear"
+
+	done;
+		false
+  
+with Exit -> true;;
+ 
+	end;;
+
