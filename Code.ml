@@ -1,3 +1,58 @@
+module Code : 
+	sig	
+		
+		type pion = Couleur of string
+
+		type t = pion list 
+
+		val nombre_pions : int 
+
+		val couleurs_possibles : pion list
+
+		val compare : t -> t -> int
+		
+		val string_of_code : t -> string
+		
+		val contient : t -> t -> bool
+
+		val code_of_string_bis : string -> t
+
+		val code_of_string : string -> t -> t option
+
+		val supprime_un : 'a -> 'a list -> 'a list
+
+		val param_couleur_bis : int -> pion list
+
+		val param_couleurs: int -> pion list
+      
+		val make_liste : int -> int list
+
+		val combi : 'a list -> ('a * 'a) list
+
+		val liste_reponse : int -> (int * int) list
+
+		val bonne_rep : 'a list -> 'a list -> ('a * 'a) list
+	
+		val mauvaise_rep : 'a list -> 'a list -> ('a * 'a) list
+
+		val reponse_tot : t -> t -> (int * int) option
+
+		val tuple_to_string : (int * int) option -> string
+
+		val reponse_correcte : int -> (int * int) option -> bool
+
+		val saisie : t -> int -> pion list
+
+		val decision_final : int -> int -> t -> t -> bool 
+
+		(*val tous : t list;;
+
+		val toutes_reponses : (int*int) list ;;
+
+		val reponse : t -> t -> (int*int) option;;*)
+	
+	end =
+
 struct 	
 		(*#load "str.cma";;*)		
 	
