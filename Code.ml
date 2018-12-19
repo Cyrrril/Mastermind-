@@ -1,48 +1,125 @@
 module Code : 
 	sig	
-		
+		(** Le type d'un pion *)
 		type pion = Couleur of string
 
+		
+		(** Le type d'un code *)
 		type t = pion list 
 
+		(** Nombre de pions par code *)
 		val nombre_pions : int 
 
+		(** Liste des couleurs possibles *)
 		val couleurs_possibles : pion list
 
+		(** Compare deux codes
+* @param code1 premier code a comparer
+* @param code2 second code a comparer
+* @return 0 si les deux codes sont identiques,
+un entier positif si [code1] est strictement plus grand que [code2]
+un entier negatif si [code1] est strictement plus petit que [code2]
+*)
 		val compare : t -> t -> int
-		
-		val string_of_code : t -> string
-		
-		val contient : t -> t -> bool
 
+
+		(** Conversion code vers chaine de caracteres (pour affichage)
+* @param code code a convertir
+* @return la representation en chaine de caracteres de [code]
+*)		
+		val string_of_code : t -> string
+
+		(** contient
+*@param liste1
+*@param liste2
+*@return vrai ou faux selon si la liste 2 contient des élements de la liste 1
+*)		
+		val contient : t -> t -> bool
+		
 		val code_of_string_bis : string -> t
 
+		(** Conversion chaine de caracteres vers code (pour saisie)
+* @param string chaine de caractere saisie
+* @return le code correspondant a la saisie si la conversion est possible
+[None] si la conversion n'est pas possible
+*)
 		val code_of_string : string -> t -> t option
 
+
+		(** supprimer un élément d'une liste
+	@param un élément de n'importe quel type
+	@param une liste de n'importe quel type
+	@return la liste sans l'élément donné en 1er paramètre
+*)
 		val supprime_un : 'a -> 'a list -> 'a list
 
 		val param_couleur_bis : int -> pion list
 
+		(** créer une liste de n couleurs
+	@param un entier n entre 0 et 6 
+	@return une liste de n couleurs donné aléatoirement
+*)
 		val param_couleurs: int -> pion list
       
+		(** créer une liste de n+1 entiers
+	@param un entier n 
+	@return une liste de n+1 entiers démarrant de 0 jusqu'au nombre n
+*)
 		val make_liste : int -> int list
 
+		(** créer une liste de couples
+	@param une liste de n'importe quel type 
+	@return une liste de couples contenant tous les couples possibles de la liste
+*)
 		val combi : 'a list -> ('a * 'a) list
 
+		(** La liste de toutes les reponses possibles *)
 		val liste_reponse : int -> (int * int) list
 
+		(** créer une liste de couples
+	@param une liste1 de n'importe quel type 
+	@param une liste2 de n'importe quel type 
+	@return une liste de couples contenant les couples des valeurs identiques entre les 2 listes 
+*)
 		val bonne_rep : 'a list -> 'a list -> ('a * 'a) list
-	
+
+		(** créer une liste de couples
+	@param une liste1 de n'importe quel type 
+	@param une liste2 de n'importe quel type 
+	@return une liste de couples contenant les couples de valeurs différentes entre les 2 listes
+*)	
 		val mauvaise_rep : 'a list -> 'a list -> ('a * 'a) list
 
+		(** Calcule la reponse d'un code par rapport au code cache
+* @param code le code propose
+* @param vrai_code le code cache
+* @return un couple (nombre de pions bien places, nombre de pions mal places)
+[None] si la reponse ne peut etre calculee
+*)
 		val reponse_tot : t -> t -> (int * int) option
 
+		(** créer une chaîne de carcatère à partir d'un couple
+	@param un couple d'entier
+	@return une chaîne de caractère donnant le nombre de pions bien placé et le nombre de pions mal placé 
+*)
 		val tuple_to_string : (int * int) option -> string
 
+		(** créer une liste de couples
+	@param un entier
+	@param un couple d'entier
+	@return vrai ou faux si la réponse proposé correspond ou non au code de base
+*)
+		
 		val reponse_correcte : int -> (int * int) option -> bool
 
+		(** entrer une proposition de code
+* @param liste des couleurs
+* @param un entier entre 1 et 6
+* @return une liste des couleurs que l'on propose
+*)
 		val saisie : t -> int -> pion list
 
+	
 		val decision_final : int -> int -> t -> t -> bool 
 
 		(*val tous : t list;;
@@ -130,7 +207,7 @@ struct
 
 
 		let tuple_to_string a = match a with
-			|Some((b,c)) -> ((string_of_int b)^" bien place, "^(string_of_int c)^" mauvais pion. ")
+			|Some((b,c)) -> ((string_of_int b)^" bien place, "^(string_of_int c)^" mal placé. ")
 			|None -> "";;
 
 		let reponse_correcte n = function
