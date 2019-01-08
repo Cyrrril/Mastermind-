@@ -226,22 +226,19 @@ struct
 		else List.rev (code_of_string_bis s);;
 
 
-	let decision_final tentativeMax tailleCode couleur_possible codeSecret =   
-try
-	Sys.command "clear";	
-	let rappel = ref "\n" in 
-	for i = 0 to (tentativeMax-1) do
-		let entree = saisie couleur_possible tailleCode in entree ;
-		rappel := !rappel^"\n"^(string_of_code entree); 		
-	match (reponse_correcte tailleCode (reponse_tot codeSecret entree)) with
-			|true -> raise Exit
-			|false -> print_string ( "Mauvaise réponse -> "^(tuple_to_string (reponse_tot codeSecret entree)));
-		Sys.command "clear"
-
-	done;
-		false
+		let decision_final tentativeMax tailleCode couleur_possible codeSecret =  
+			try
+				let rappel = ref "\n" in
+					for i = 0 to (tentativeMax-1) do
+						let ()=clscreen (Sys.command "clear") in
+							let ()=print_string "Liste de couleur possible: " in let ()=print_list couleur_possible; print_string "\n" in
+								let entree = saisie couleur_possible tailleCode in 
+									let ()= (rappel := !rappel^"\n"^(string_of_code (List.rev entree))) in
+										match (reponse_correcte tailleCode (reponse_tot codeSecret entree)) with
+											|true -> raise Exit
+											|false -> print_string ( (!rappel)^"\n"^"\n"^("Mauvaise réponse -> ")^(tuple_to_string (reponse_tot codeSecret entree))^"\n") 
+			done;
+				false
   
-with Exit -> true;;
- 
-	end;;
+		with Exit -> true;;
 
