@@ -252,4 +252,10 @@ let generation_codeSec taillecode couleur_possible =
 
  
 	end;;
+	
+let joueur_devine tentativeMax tailleCode couleur_pos = let codeOrdi = generation_codeSec tailleCode couleur_pos in decision_final tentativeMax tailleCode couleur_pos codeOrdi;;
+
+
+
+
 
