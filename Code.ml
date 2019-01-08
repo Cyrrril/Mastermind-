@@ -242,6 +242,14 @@ try
 		false
   
 with Exit -> true;;
+
+let generation_codeSec taillecode couleur_possible = 
+	let rec aux acc taillecode = match taillecode with
+		|0-> acc
+		|n when n<0 -> raise (Invalid_argument "generation_codeSec")
+		|n -> aux ((List.nth couleur_possible (Random.int (List.length couleur_possible)))::acc) (taillecode-1) in aux [] taillecode;;
+
+
  
 	end;;
 
