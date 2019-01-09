@@ -414,3 +414,13 @@ let saisie_rep_manue2 n= let ()=print_string "Verifiez le code: \n(Nb bon et bie
 					let b=read_int () in 
 						let rep_manu=Some (a,b) in rep_manu;;
 
+let rec saisie_rep_manue n = try (saisie_rep_manue2 0 ) with
+				|Failure "int_of_string" -> saisie_rep_manue 0;;
+
+
+exception Exit3;;
+
+let bonOuFaux rappel tailleCode rep_manu = match (reponse_correcte tailleCode rep_manu) with
+	|false -> print_string ( (!rappel)^"\n"^"\n"^("Mauvaise réponse -> ")^(tuple_to_string rep_manu)^"\n")
+	|true -> raise Exit3;;
+
