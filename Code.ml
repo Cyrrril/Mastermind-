@@ -119,20 +119,155 @@ un entier negatif si [code1] est strictement plus petit que [code2]
 *)
 		val saisie : t -> int -> pion list
 
+		(** 
+* @param un entier
+* @param un entier
+* @param une liste de couleur
+* @param une liste de couleur
+* @return vrai ou faux si 
+*)
+		val decision_final : int -> int -> t -> t -> bool
+
+		(** 
+* @param un entier
+* @param une liste de n'importe quel type
+* @return 
+*)
+
+		val generation_codeSec : int -> 'a list -> 'a list
+
+		(** entrer une proposition de code
+* @param un entier
+* @param un entier
+* @param une liste de couleur
+* @return vrai ou faux si
+*) 
+		
+		val joueur_devine : int -> int -> t -> bool
+
+		(** entrer une proposition de code
+* @param un entier
+* @param une liste de couleur
+* @param un entier
+* @return vrai ou faux si
+*)
+		
+		val reponse_auto_joueur int -> t -> int -> bool
+
+		(** entrer une proposition de code
+* @param type générique
+* @return un couple d'entier
+*)
+
+		val saisie_rep_manue2 : 'a -> (int*int) option
+
+		(** entrer 
+* @param un entier
+* @return un couple d'entier
+*)
+
+		val saisie_rep_manue : int -> (int*int) option
+
+		(** entrer 
+* @param un pointeur sur le string
+* @param un entier 
+* @param un couple d'entier
+* @return 
+*)
 	
-		val decision_final : int -> int -> t -> t -> bool 
+		val bonOuFaux : string ref -> int -> (int*int) option -> unit
 
-		(*val tous : t list;;
+		(** entrer 
+* @param entier
+* @param une liste de couleur
+* @param un entier
+* @return 
+*)
 
-		val toutes_reponses : (int*int) list ;;
+		val reponse manu_joueur : int -> t -> int -> bool 
 
-		val reponse : t -> t -> (int*int) option;;*)
+		(** entrer 
+* @param un entier
+* @return un entier
+*)
+
+		val tjr_pair : int  -> int
+
+		(** entrer 
+* @param une chaine de caractère
+* @param une liste de couleur
+*@ param un entier
+*@ param un entier
+*@ param un type générique
+*@ param un type générique
+* @return vrai ou faux
+*)
+
+		val qui_commence_auto : string -> t -> int -> int -> 'a -> 'a -> bool
+
+		(** entrer 
+* @param une chaine de caractère
+* @param une liste de couleur
+*@ param un entier
+*@ param un entier
+*@ param un type générique
+*@ param un type générique
+* @return vrai ou faux
+*)
+
+		val qui_commence_manu : string -> t -> int -> int -> 'a -> 'a -> bool
+
+		(** entrer 
+* @param une chaine de caractère
+* @param une liste de couleur
+*@ param un entier
+*@ param un entier
+*@ param un type générique
+*@ param un type générique
+* @return vrai ou faux
+*)
+
+		val qui_commence : string -> t -> int -> int -> 'a -> 'a  -> bool -> bool
+
+		(** entrer 
+* @param un entier
+* @param une liste de couleur
+*@ param un entier
+*@ param un entier
+*@ param vrai ou faux si 
+* @return un couple d'entier
+*)
+
+		val alternance1 : int -> t -> int -> int -> int -> bool -> int*int
+
+		(** entrer 
+* @param une chaine de caractère
+* @param un entier
+*@ param une liste de couleur
+*@ param un entier
+*@ param un entier
+*@ param vrai ou faux si
+* @return 
+*)
+
+		val victoire : string -> int -> t -> int -> int -> bool -> unit 
+
+		(** entrer 
+* @param une chaine de caractère
+* @param un entier
+*@ param un entier
+*@ param vrai ou faux si
+* @return 
+*)
+
+		val mastermind string -> int -> int -> bool -> unit
+
+		
 	
 	end =
 
 struct 	
-		(*#load "str.cma";;*)		
-	
+
 		
 		type pion = Couleur of string;;
 
