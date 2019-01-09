@@ -1,5 +1,6 @@
 module Code : 
 	sig	
+		
 		(** Le type d'un pion *)
 		type pion = Couleur of string
 
@@ -99,15 +100,15 @@ un entier negatif si [code1] est strictement plus petit que [code2]
 		val reponse_tot : t -> t -> (int * int) option
 
 		(** créer une chaîne de carcatère à partir d'un couple
-	@param un couple d'entier
-	@return une chaîne de caractère donnant le nombre de pions bien placé et le nombre de pions mal placé 
+	*@param un couple d'entier
+	*@return une chaîne de caractère donnant le nombre de pions bien placé et le nombre de pions mal placé 
 *)
 		val tuple_to_string : (int * int) option -> string
 
 		(** créer une liste de couples
-	@param un entier
-	@param un couple d'entier
-	@return vrai ou faux si la réponse proposé correspond ou non au code de base
+	*@param un entier
+	*@param un couple d'entier
+	*@return vrai ou faux si la réponse proposé correspond ou non au code de base
 *)
 		
 		val reponse_correcte : int -> (int * int) option -> bool
@@ -119,12 +120,12 @@ un entier negatif si [code1] est strictement plus petit que [code2]
 *)
 		val saisie : t -> int -> pion list
 
-		(** 
+		(** récupère le code saisie par l'utilisateur
 * @param un entier
 * @param un entier
 * @param une liste de couleur
 * @param une liste de couleur
-* @return vrai ou faux si 
+* @return la liste de pion saise  
 *)
 		val decision_final : int -> int -> t -> t -> bool
 
@@ -136,7 +137,7 @@ un entier negatif si [code1] est strictement plus petit que [code2]
 
 		val generation_codeSec : int -> 'a list -> 'a list
 
-		(** entrer une proposition de code
+		(** Génère un code secret
 * @param un entier
 * @param un entier
 * @param une liste de couleur
@@ -145,7 +146,7 @@ un entier negatif si [code1] est strictement plus petit que [code2]
 		
 		val joueur_devine : int -> int -> t -> bool
 
-		(** entrer une proposition de code
+		(** Le joueur devine le code
 * @param un entier
 * @param une liste de couleur
 * @param un entier
@@ -154,7 +155,7 @@ un entier negatif si [code1] est strictement plus petit que [code2]
 		
 		val reponse_auto_joueur int -> t -> int -> bool
 
-		(** entrer une proposition de code
+		(** Réponse automatique du joueur (pas de vérification)
 * @param type générique
 * @return un couple d'entier
 *)
@@ -168,7 +169,7 @@ un entier negatif si [code1] est strictement plus petit que [code2]
 
 		val saisie_rep_manue : int -> (int*int) option
 
-		(** entrer 
+		(** Le joueur saisie le nombre de pions bien placés et mal placés 
 * @param un pointeur sur le string
 * @param un entier 
 * @param un couple d'entier
@@ -186,7 +187,7 @@ un entier negatif si [code1] est strictement plus petit que [code2]
 
 		val reponse manu_joueur : int -> t -> int -> bool 
 
-		(** entrer 
+		(** Réponse finale du joueur 
 * @param un entier
 * @return un entier
 *)
@@ -205,7 +206,7 @@ un entier negatif si [code1] est strictement plus petit que [code2]
 
 		val qui_commence_auto : string -> t -> int -> int -> 'a -> 'a -> bool
 
-		(** entrer 
+		(** détermine qui commence de manière automatique 
 * @param une chaine de caractère
 * @param une liste de couleur
 *@ param un entier
@@ -217,7 +218,7 @@ un entier negatif si [code1] est strictement plus petit que [code2]
 
 		val qui_commence_manu : string -> t -> int -> int -> 'a -> 'a -> bool
 
-		(** entrer 
+		(** détermine qui commence de manière manuel 
 * @param une chaine de caractère
 * @param une liste de couleur
 *@ param un entier
@@ -240,7 +241,7 @@ un entier negatif si [code1] est strictement plus petit que [code2]
 
 		val alternance1 : int -> t -> int -> int -> int -> bool -> int*int
 
-		(** entrer 
+		(** Permet d'alterner le joueur qui va commencer entre chaque partie 
 * @param une chaine de caractère
 * @param un entier
 *@ param une liste de couleur
@@ -252,7 +253,7 @@ un entier negatif si [code1] est strictement plus petit que [code2]
 
 		val victoire : string -> int -> t -> int -> int -> bool -> unit 
 
-		(** entrer 
+		(** Détermine qui a gagné 
 * @param une chaine de caractère
 * @param un entier
 *@ param un entier
@@ -261,9 +262,6 @@ un entier negatif si [code1] est strictement plus petit que [code2]
 *)
 
 		val mastermind string -> int -> int -> bool -> unit
-
-		
-	
 	end =
 
 struct 	
