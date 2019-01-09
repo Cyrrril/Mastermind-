@@ -410,6 +410,9 @@ let entree = saisie couleur_pos tailleCode in
 with Exit -> true;;
 
 
-
-
+let saisie_rep_manue2 n= let ()=print_string "Verifiez le code: \n(Nb bon et bien placé) \n" in 
+			let a=read_int () in 
+				let ()=print_string "(Nb bon mais mal placé) \n" in 
+					let b=read_int () in 
+						let rep_manu=Some (a,b) in rep_manu;;
 
