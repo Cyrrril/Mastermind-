@@ -255,6 +255,25 @@ let generation_codeSec taillecode couleur_possible =
 	
 let joueur_devine tentativeMax tailleCode couleur_pos = let codeOrdi = generation_codeSec tailleCode couleur_pos in decision_final tentativeMax tailleCode couleur_pos codeOrdi;;
 
+let reponse_auto_joueur tailleCode couleur_pos tentativeMax = 
+try
+print_string "Liste de couleur possible: "; print_list couleur_pos; print_string "\n";
+let rappel = ref "\n" in
+let entree = saisie couleur_pos tailleCode in 
+	for i = 0 to (tentativeMax-1) do
+		let ()=clscreen (Sys.command "clear") in
+			let ()=print_string "Entrer pour continuer" in
+				let ()=print_string (read_line ()) in
+					let codeOrdi = generation_codeSec tailleCode couleur_pos in 
+						let ()= (rappel := !rappel^"\n"^(string_of_code (List.rev codeOrdi))) in
+							match (reponse_correcte tailleCode (reponse_tot entree codeOrdi)) with
+								|true -> raise Exit
+								|false -> print_string ( (!rappel)^"\n"^"\n"^("Mauvaise réponse -> ")^(tuple_to_string (reponse_tot entree codeOrdi))^"\n") 
+	done;
+	false
+  
+with Exit -> true;;
+
 
 
 
