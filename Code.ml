@@ -150,21 +150,15 @@ un entier negatif si [code1] est strictement plus petit que [code2]
 * @return vrai ou faux si
 *)
 		
-		val reponse_auto_joueur int -> t -> int -> bool
+		val reponse_automatique_joueur int -> t -> int -> bool
 
 		(** Réponse automatique du joueur (pas de vérification)
 * @param type générique
 * @return un couple d'entier
 *)
 
-		val saisie_rep_manue2 : 'a -> (int*int) option
 
-		(** entrer 
-* @param un entier
-* @return un couple d'entier
-*)
-
-		val saisie_rep_manue : int -> (int*int) option
+		val saisie_rep_manuel : int -> (int*int) option
 
 		(** Le joueur saisie le nombre de pions bien placés et mal placés 
 * @param un pointeur sur le string
@@ -173,7 +167,7 @@ un entier negatif si [code1] est strictement plus petit que [code2]
 * @return 
 *)
 	
-		val bonOuFaux : string ref -> int -> (int*int) option -> unit
+		val bon_faux : string ref -> int -> (int*int) option -> unit
 
 		(** entrer 
 * @param entier
@@ -182,7 +176,7 @@ un entier negatif si [code1] est strictement plus petit que [code2]
 * @return 
 *)
 
-		val reponse manu_joueur : int -> t -> int -> bool 
+		val reponse_manuel_joueur : int -> t -> int -> bool 
 
 		(** Réponse finale du joueur 
 * @param un entier
@@ -213,7 +207,7 @@ un entier negatif si [code1] est strictement plus petit que [code2]
 * @return vrai ou faux
 *)
 
-		val qui_commence_manu : string -> t -> int -> int -> 'a -> 'a -> bool
+		val qui_commence_manuel : string -> t -> int -> int -> 'a -> 'a -> bool
 
 		(** détermine qui commence de manière manuel 
 * @param une chaine de caractère
@@ -385,7 +379,7 @@ let generation_code_secret taillecode couleur_possible =
 	
 let joueur_devine tentativeMax tailleCode couleur_pos = let codeOrdi = generation_code_secret tailleCode couleur_pos in decision_final tentativeMax tailleCode couleur_pos codeOrdi;;
 
-let reponse_auto_joueur tailleCode couleur_pos tentativeMax = 
+let reponse_automatique_joueur tailleCode couleur_pos tentativeMax = 
 try
 print_string "Liste de couleur possible: "; print_list couleur_pos; print_string "\n";
 let rappel = ref "\n" in
@@ -405,19 +399,53 @@ let entree = saisie_code couleur_pos tailleCode in
 with Exit -> true;;
 
 
-let saisie_rep_manue2 n= let ()=print_string "Verifiez le code: \n(Nb bon et bien placé) \n" in 
+let saisie_rep_manuel2 n= let ()=print_string "Verifiez le code: \n(Nb bon et bien placé) \n" in 
 			let a=read_int () in 
 				let ()=print_string "(Nb bon mais mal placé) \n" in 
 					let b=read_int () in 
 						let rep_manu=Some (a,b) in rep_manu;;
 
-let rec saisie_rep_manue n = try (saisie_rep_manue2 0 ) with
-				|Failure "int_of_string" -> saisie_rep_manue 0;;
+let rec saisie_rep_manuel n = try (saisie_rep_manuel2 0 ) with
+				|Failure "int_of_string" -> saisie_rep_manuel 0;;
 
 
 exception Exit3;;
 
-let bonOuFaux rappel tailleCode rep_manu = match (reponse_correcte tailleCode rep_manu) with
+let bon_faux rappel tailleCode rep_manu = match (reponse_correcte tailleCode rep_manu) with
 	|false -> print_string ( (!rappel)^"\n"^"\n"^("Mauvaise réponse -> ")^(tuple_to_string rep_manu)^"\n")
 	|true -> raise Exit3;;
+
+let reponse_manuel_joueur tailleCode couleur_pos tentativeMax = 
+try
+print_string "Liste de couleur possible: "; print_list couleur_pos; print_string "\n";
+let entree = saisie couleur_pos tailleCode in let rappel = ref "\n" in
+	for i = 0 to (tentativeMax-1) do
+	let ()=clscreen (Sys.command "clear") in
+		let codeOrdi = generation_codeSec tailleCode couleur_pos in let ()= print_string "Code ordi : " in let ()=print_list codeOrdi in let ()=print_string "\n" in
+			let rep_manu = saisie_rep_manue 0 in
+				let ()= (rappel := !rappel^"\n"^(string_of_code (List.rev codeOrdi))) in
+					match (rep_manu = (reponse_tot entree codeOrdi)) with 
+						|true -> bonOuFaux rappel tailleCode rep_manu
+						|false -> raise Exit			
+	done;
+	false
+  
+with |Exit -> let ()=print_string "Vous avez tricher !\n" in true
+     |Exit3 -> true;;
+
+
+
+let tjr_pair n = match (n mod 2) with
+	|0 -> n
+	|a -> n+1 ;;
+
+let qui_commence_auto nom_joueur couleur_pos tailleCode tentativeMax joueur n= let ()=clscreen (Sys.command "clear") in if (joueur=n) then (print_string ("\n"^nom_joueur^" créé le code \n");( reponse_auto_joueur tailleCode couleur_pos tentativeMax )) else (print_string "L'ordi créé le code \n";(joueur_devine tentativeMax tailleCode couleur_pos));;
+
+let qui_commence_manuel nom_joueur couleur_pos tailleCode tentativeMax joueur n= let ()=clscreen (Sys.command "clear") in if (joueur=n) then (print_string ("\n"^nom_joueur^" créé le code \n");( reponse_manuel_joueur tailleCode couleur_pos tentativeMax )) else (print_string "L'ordi créé le code \n";(joueur_devine tentativeMax tailleCode couleur_pos));;
+
+let qui_commence nom_joueur couleur_pos tailleCode tentativeMax joueur n autom= match autom with
+	|true -> qui_commence_auto nom_joueur couleur_pos tailleCode tentativeMax joueur n
+	|false -> qui_commence_manuel nom_joueur couleur_pos tailleCode tentativeMax joueur n;;
+
+
 
