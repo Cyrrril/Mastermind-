@@ -54,25 +54,23 @@ un entier negatif si [code1] est strictement plus petit que [code2]
 *)
 		val supprime_un : 'a -> 'a list -> 'a list
 
-		val param_couleur_bis : int -> pion list
-
 		(** créer une liste de n couleurs
 	@param un entier n entre 0 et 6 
 	@return une liste de n couleurs donné aléatoirement
 *)
-		val param_couleurs: int -> pion list
+		val create_list_coul: int -> pion list
       
 		(** créer une liste de n+1 entiers
 	@param un entier n 
 	@return une liste de n+1 entiers démarrant de 0 jusqu'au nombre n
 *)
-		val make_liste : int -> int list
+		val create_list_entier : int -> int list
 
 		(** créer une liste de couples
 	@param une liste de n'importe quel type 
 	@return une liste de couples contenant tous les couples possibles de la liste
 *)
-		val combi : 'a list -> ('a * 'a) list
+		val combinaison : 'a list -> ('a * 'a) list
 
 		(** La liste de toutes les reponses possibles *)
 		val liste_reponse : int -> (int * int) list
@@ -82,14 +80,14 @@ un entier negatif si [code1] est strictement plus petit que [code2]
 	@param une liste2 de n'importe quel type 
 	@return une liste de couples contenant les couples des valeurs identiques entre les 2 listes 
 *)
-		val bonne_rep : 'a list -> 'a list -> ('a * 'a) list
+		val bonne_reponse : 'a list -> 'a list -> ('a * 'a) list
 
 		(** créer une liste de couples
-	@param une liste1 de n'importe quel type 
-	@param une liste2 de n'importe quel type 
-	@return une liste de couples contenant les couples de valeurs différentes entre les 2 listes
+@param une liste1 de n'importe quel type 
+@param une liste2 de n'importe quel type 
+@return une liste de couples contenant les couples de valeurs différentes entre les 2 listes
 *)	
-		val mauvaise_rep : 'a list -> 'a list -> ('a * 'a) list
+		val mauvaise_reponse : 'a list -> 'a list -> ('a * 'a) list
 
 		(** Calcule la reponse d'un code par rapport au code cache
 * @param code le code propose
@@ -97,11 +95,10 @@ un entier negatif si [code1] est strictement plus petit que [code2]
 * @return un couple (nombre de pions bien places, nombre de pions mal places)
 [None] si la reponse ne peut etre calculee
 *)
-		val reponse_tot : t -> t -> (int * int) option
+		val reponse_totale : t -> t -> (int * int) option
 
-		(** créer une chaîne de carcatère à partir d'un couple
-	*@param un couple d'entier
-	*@return une chaîne de caractère donnant le nombre de pions bien placé et le nombre de pions mal placé 
+		(** créer une chaîne de carcatère à partir d'un couple 			*@param un couple d'entier
+*@return une chaîne de caractère donnant le nombre de pions bien placé et le nombre de pions mal placé 
 *)
 		val tuple_to_string : (int * int) option -> string
 
@@ -118,7 +115,7 @@ un entier negatif si [code1] est strictement plus petit que [code2]
 * @param un entier entre 1 et 6
 * @return une liste des couleurs que l'on propose
 *)
-		val saisie : t -> int -> pion list
+		val saisie_code : t -> int -> pion list
 
 		(** récupère le code saisie par l'utilisateur
 * @param un entier
@@ -135,7 +132,7 @@ un entier negatif si [code1] est strictement plus petit que [code2]
 * @return 
 *)
 
-		val generation_codeSec : int -> 'a list -> 'a list
+		val generation_code_secret : int -> 'a list -> 'a list
 
 		(** Génère un code secret
 * @param un entier
@@ -312,30 +309,30 @@ struct
 				| a when a<7 -> let i = (Random.int(List.length(coul))) in aux ((List.nth (coul) i)::acc) (n-1) (supprime_un (List.nth (coul) i) coul)
 				| _-> raise (Failure "nombre trop grand" ) in aux [] n couleurs_possibles;;
 		
-		let rec param_couleurs n = try (param_couleur_bis n) with
-				| Failure "nombre trop grand" -> print_string ("Nombre Incorrect -> Saisir un nombre entre 0 et 6 :\n"); let i= read_int() in param_couleurs i;;
+		let rec create_list_coul n = try (param_couleur_bis n) with
+				| Failure "nombre trop grand" -> print_string ("Nombre Incorrect -> Saisir un nombre entre 0 et 6 :\n"); let i= read_int() in create_list_coul i;;
 
 
 (*let liste_code_possible n lcoul = if (n=2) then (code2 lcoul) else if (n=3) then (code3 lcoul) else (code4 lcoul);; *)
 
 
-		let make_liste n = 
+		let create_list_entier n = 
 			let rec aux acc n = match (n+1) with
 				|0->acc
 				|_-> aux (n::acc) (n-1) in aux [] n;;
 
-		let combi l = 
+		let combinaison l = 
 			let res = List.fold_left (fun acc x -> List.fold_left (fun acc y -> (x,y) :: acc) acc l) [] l in List.rev res;;
 
 
-		let liste_reponse n = List.filter (fun (b,c)->(b+c)=n) (combi(make_liste n));;
+		let liste_reponse n = List.filter (fun (b,c)->(b+c)=n) (combinaison(create_list_entier n));;
 
 
-		let bonne_rep c1 c2 = List.filter (fun (a,b) -> a=b ) (List.combine c1 c2);;
+		let bonne_reponse c1 c2 = List.filter (fun (a,b) -> a=b ) (List.combine c1 c2);;
 
-		let mauvaise_rep c1 c2 = List.filter (fun (a,b) -> a<>b) (List.combine c1 c2);;
+		let mauvaise_reponse c1 c2 = List.filter (fun (a,b) -> a<>b) (List.combine c1 c2);;
 
-		let reponse_tot c1 c2 = try (Some (List.length (bonne_rep (c1 : t) (c2 : t)),List.length (mauvaise_rep (c1 : t) (c2 : t)))) with
+		let reponse_totale c1 c2 = try (Some (List.length (bonne_reponse (c1 : t) (c2 : t)),List.length (mauvaise_reponse (c1 : t) (c2 : t)))) with
 		| Invalid_argument "List.combine" -> None;;
 
 
@@ -351,11 +348,11 @@ struct
 
 		
 	
-		let rec saisie couleur_possible tailleCode = print_string("Entrer une proposition de code : "); 
+		let rec saisie_code couleur_possible tailleCode = print_string("Entrer une proposition de code : "); 
 		let s=read_line () in let codeEntre=(code_of_string s couleur_possible) in 
-		if ((codeEntre)=None) then (print_string("Saisie incorrecte (Tout écrire en minuscule ou couleurs non définies) : "); saisie couleur_possible tailleCode)
- 		else if ((List.length (code_of_string_bis s))>tailleCode)  then (print_string("Saisie incorrecte (Code trop grand) : "); saisie couleur_possible tailleCode)
-		else if ((List.length (code_of_string_bis s))<tailleCode) then (print_string("Saisie incorrecte (Code trop petit) : "); saisie couleur_possible tailleCode)
+		if ((codeEntre)=None) then (print_string("Saisie incorrecte (Tout écrire en minuscule ou couleurs non définies) : "); saisie_code couleur_possible tailleCode)
+ 		else if ((List.length (code_of_string_bis s))>tailleCode)  then (print_string("Saisie incorrecte (Code trop grand) : "); saisie_code couleur_possible tailleCode)
+		else if ((List.length (code_of_string_bis s))<tailleCode) then (print_string("Saisie incorrecte (Code trop petit) : "); saisie_code couleur_possible tailleCode)
 		else List.rev (code_of_string_bis s);;
 
 
@@ -364,7 +361,7 @@ try
 	Sys.command "clear";	
 	let rappel = ref "\n" in 
 	for i = 0 to (tentativeMax-1) do
-		let entree = saisie couleur_possible tailleCode in entree ;
+		let entree = saisie_code couleur_possible tailleCode in entree ;
 		rappel := !rappel^"\n"^(string_of_code entree); 		
 	match (reponse_correcte tailleCode (reponse_tot codeSecret entree)) with
 			|true -> raise Exit
@@ -376,28 +373,28 @@ try
   
 with Exit -> true;;
 
-let generation_codeSec taillecode couleur_possible = 
+let generation_code_secret taillecode couleur_possible = 
 	let rec aux acc taillecode = match taillecode with
 		|0-> acc
-		|n when n<0 -> raise (Invalid_argument "generation_codeSec")
+		|n when n<0 -> raise (Invalid_argument "generation_code_secret")
 		|n -> aux ((List.nth couleur_possible (Random.int (List.length couleur_possible)))::acc) (taillecode-1) in aux [] taillecode;;
 
 
  
 	end;;
 	
-let joueur_devine tentativeMax tailleCode couleur_pos = let codeOrdi = generation_codeSec tailleCode couleur_pos in decision_final tentativeMax tailleCode couleur_pos codeOrdi;;
+let joueur_devine tentativeMax tailleCode couleur_pos = let codeOrdi = generation_code_secret tailleCode couleur_pos in decision_final tentativeMax tailleCode couleur_pos codeOrdi;;
 
 let reponse_auto_joueur tailleCode couleur_pos tentativeMax = 
 try
 print_string "Liste de couleur possible: "; print_list couleur_pos; print_string "\n";
 let rappel = ref "\n" in
-let entree = saisie couleur_pos tailleCode in 
+let entree = saisie_code couleur_pos tailleCode in 
 	for i = 0 to (tentativeMax-1) do
 		let ()=clscreen (Sys.command "clear") in
 			let ()=print_string "Entrer pour continuer" in
 				let ()=print_string (read_line ()) in
-					let codeOrdi = generation_codeSec tailleCode couleur_pos in 
+					let codeOrdi = generation_code_secret tailleCode couleur_pos in 
 						let ()= (rappel := !rappel^"\n"^(string_of_code (List.rev codeOrdi))) in
 							match (reponse_correcte tailleCode (reponse_tot entree codeOrdi)) with
 								|true -> raise Exit
