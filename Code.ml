@@ -141,7 +141,7 @@ un entier negatif si [c1] est strictement plus petit que [c2]
 *@return vrai ou faux si
 *)
 		
-		val joueur_devine : int -> int -> t -> bool
+		val joueur_cherche : int -> int -> t -> bool
 
 		(** Réponse automatique du joueur (pas de vérification)
 *@param type générique
@@ -186,7 +186,7 @@ un entier negatif si [c1] est strictement plus petit que [c2]
 *@return vrai ou faux
 *)
 
-		val tjr_pair : int  -> int
+		val est_toujours_pair : int  -> int
 
 
 		(** détermine qui commence de manière automatique 
@@ -248,7 +248,7 @@ un entier negatif si [c1] est strictement plus petit que [c2]
 
 
 
-		val mastermind string -> int -> int -> bool -> unit
+		val mastermind : string -> int -> int -> bool -> unit
 	end =
 
 struct 	
@@ -370,7 +370,7 @@ let generation_code_secret taillecode couleur_probable =
  
 	end;;
 	
-let joueur_devine tentativeMax taille_code couleur_prob = let codeOrdi = generation_code_secret taille_code couleur_prob in decision_final tentativeMax taille_code couleur_prob codeOrdi;;
+let joueur_cherche tentativeMax taille_code couleur_prob = let codeOrdi = generation_code_secret taille_code couleur_prob in decision_final tentativeMax taille_code couleur_prob codeOrdi;;
 
 let reponse_automatique_joueur taille_code couleur_prob tentativeMax = 
 try
@@ -415,10 +415,10 @@ let entree = saisie_code couleur_prob taille_code in let rappel = ref "\n" in
 	for i = 0 to (tentativeMax-1) do
 	let ()=clscreen (Sys.command "clear") in
 		let codeOrdi = generation_codeSec taille_code couleur_prob in let ()= print_string "Code ordi : " in let ()=print_list codeOrdi in let ()=print_string "\n" in
-			let rep_manu = saisie_rep_manue 0 in
+			let rep_manu = saisie_rep_manuel 0 in
 				let ()= (rappel := !rappel^"\n"^(string_of_code (List.rev codeOrdi))) in
 					match (rep_manu = (reponse entree codeOrdi)) with 
-						|true -> bonOuFaux rappel taille_code rep_manu
+						|true -> bon_faux rappel taille_code rep_manu
 						|false -> raise Exit			
 	done;
 	false
@@ -428,13 +428,13 @@ with |Exit -> let ()=print_string "Vous avez tricher !\n" in true
 
 
 
-let tjr_pair n = match (n mod 2) with
+let est_toujours_pair n = match (n mod 2) with
 	|0 -> n
 	|a -> n+1 ;;
 
-let qui_commence_auto nom_joueur couleur_prob taille_code tentativeMax joueur n= let ()=clscreen (Sys.command "clear") in if (joueur=n) then (print_string ("\n"^nom_joueur^" créé le code \n");( reponse_auto_joueur taille_code couleur_prob tentativeMax )) else (print_string "L'ordi créé le code \n";(joueur_devine tentativeMax taille_code couleur_prob));;
+let qui_commence_auto nom_joueur couleur_prob taille_code tentativeMax joueur n= let ()=clscreen (Sys.command "clear") in if (joueur=n) then (print_string ("\n"^nom_joueur^" créé le code \n");( reponse_automatique_joueur taille_code couleur_prob tentativeMax )) else (print_string "L'ordi créé le code \n";(joueur_cherche tentativeMax taille_code couleur_prob));;
 
-let qui_commence_manuel nom_joueur couleur_prob taille_code tentativeMax joueur n= let ()=clscreen (Sys.command "clear") in if (joueur=n) then (print_string ("\n"^nom_joueur^" créé le code \n");( reponse_manuel_joueur taille_code couleur_prob tentativeMax )) else (print_string "L'ordi créé le code \n";(joueur_devine tentativeMax taille_code couleur_prob));;
+let qui_commence_manuel nom_joueur couleur_prob taille_code tentativeMax joueur n= let ()=clscreen (Sys.command "clear") in if (joueur=n) then (print_string ("\n"^nom_joueur^" créé le code \n");( reponse_manuel_joueur taille_code couleur_prob tentativeMax )) else (print_string "L'ordi créé le code \n";(joueur_cherche tentativeMax taille_code couleur_prob));;
 
 let qui_commence nom_joueur couleur_prob taille_code tentativeMax joueur n autom= match autom with
 	|true -> qui_commence_auto nom_joueur couleur_prob taille_code tentativeMax joueur n
@@ -457,6 +457,12 @@ let rec alternance_bis nom_joueur nbPartie couleur_prob taille_code tentativeMax
 				 else if ((c) && (joueur =1)) then
 					alternance_bis nom_joueur (nbPartie-1) couleur_prob taille_code tentativeMax joueur autom (x,y+1)
 				 else alternance_bis nom_joueur (nbPartie-1) couleur_prob taille_code tentativeMax joueur autom (x+1,y)) in alternance_bis nom_joueur nbPartie couleur_prob taille_code tentativeMax joueur autom (0,0);;
+
+let victoire nom_joueur nbPartie couleur_pos tailleCode tentativeMax joueur autom = let result = alternance1 nom_joueur nbPartie couleur_pos tailleCode tentativeMax joueur autom in match result with
+	|(a,b) when a>b -> print_string (nom_joueur^" gagne")
+	|(a,b) when a=b -> print_string "Egalite"
+	|_->print_string "Ordi gagne";;
+		
 
 
 
