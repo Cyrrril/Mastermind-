@@ -326,7 +326,7 @@ let liste_code_possible n lcoul = if (n=2) then (code_2 lcoul) else if (n=3) the
 				| a when a<7 -> let i = (Random.int(List.length(coul))) in aux ((List.nth (coul) i)::acc) (n-1) (supprime_un (List.nth (coul) i) coul)
 				| _-> raise (Failure "nombre trop grand" ) in aux [] n couleurs_possibles;;
 		
-		let rec createListCoul n = try (param_couleur_bis n) with
+		let rec createListCoul n = try (createListCoul_bis n) with
 				| Failure "nombre trop grand" -> print_string ("Nombre Incorrect -> Saisir un nombre entre 0 et 6 :\n"); let i= read_int() in createListCoul i;;
 
 
