@@ -394,11 +394,11 @@ try
   
 with Exit -> true;;
 
-let generation_code_secret taillecode couleur_probable = 
-	let rec aux acc taillecode = match taillecode with
+let generation_code_secret taille_code couleur_probable = 
+	let rec aux acc taille_code = match taille_code with
 		|0-> acc
 		|n when n<0 -> raise (Invalid_argument "generation_code_secret")
-		|n -> aux ((List.nth couleur_probable (Random.int (List.length couleur_probable)))::acc) (taillecode-1) in aux [] taillecode;;
+		|n -> aux ((List.nth couleur_probable (Random.int (List.length couleur_probable)))::acc) (taille_code-1) in aux [] taille_code;;
 
 
  
@@ -491,7 +491,7 @@ let rec alternance_bis nom_joueur nbPartie couleur_prob taille_code tentativeMax
 					alternance_bis nom_joueur (nbPartie-1) couleur_prob taille_code tentativeMax joueur autom (x,y+1)
 				 else alternance_bis nom_joueur (nbPartie-1) couleur_prob taille_code tentativeMax joueur autom (x+1,y)) in alternance_bis nom_joueur nbPartie couleur_prob taille_code tentativeMax joueur autom (0,0);;
 
-let victoire nom_joueur nbPartie couleur_prob tailleCode tentativeMax joueur autom = let result = alternance nom_joueur nbPartie couleur_prob tailleCode tentativeMax joueur autom in match result with
+let victoire nom_joueur nbPartie couleur_prob taille_code tentativeMax joueur autom = let result = alternance nom_joueur nbPartie couleur_prob taille_code tentativeMax joueur autom in match result with
 	|(a,b) when a>b -> print_string (nom_joueur^" gagne")
 	|(a,b) when a=b -> print_string "Egalite"
 	|_->print_string "Ordi gagne";;
@@ -503,9 +503,9 @@ let mastermind nom_joueur tentativeMax nbPartie autom = let ()=clscreen (Sys.com
 			let nbCouleur = read_int () in 
 				let couleur_prob = createListCoul nbCouleur in 
 					let () = print_string "Quelle taille de code ? (max 4) " in 
-						let tailleCode=read_int () in 
+						let taille_code=read_int () in 
 							let joueur=Random.int 2 
-								in victoire nom_joueur npart couleur_prob tailleCode tentativeMax joueur autom;;
+								in victoire nom_joueur npart couleur_prob taille_code tentativeMax joueur autom;;
 
 end;;
 
