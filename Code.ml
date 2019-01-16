@@ -314,17 +314,16 @@ let liste_code_possible n lcoul = if (n=2) then (code_2 lcoul) else if (n=3) the
 
 
 		let rec supprime_un a l = match l with
-			| [] -> l
-			| h :: t when a = h -> t
-			| h :: k :: t when a = k -> h :: t 
-			| h :: t -> h :: supprime_un a t;;
-
+				| [] -> l
+				| h::t when a = h -> t
+				| h::k::t when a =k -> h::t
+				| h::t -> h :: supprime_un a t;;
 
 		let createListCoul_bis n = 
 			let rec aux acc n coul = match n with
-				| 0 -> acc
-				| a when a<7 -> let i = (Random.int(List.length(coul))) in aux ((List.nth (coul) i)::acc) (n-1) (supprime_un (List.nth (coul) i) coul)
-				| _-> raise (Failure "nombre trop grand" ) in aux [] n couleurs_possibles;;
+				|0 -> acc
+				|a when a<7 && a>0 -> let i = (Random.int (List.length(coul))) in aux ((List.nth (coul) i )::acc) (n-1) (supprime_un (List.nth (coul) i) coul)
+				|_-> raise ( Failure "Nombre trop grand" ) in aux [] n couleurs_possibles;;	
 		
 		let rec createListCoul n = try (createListCoul_bis n) with
 				| Failure "nombre trop grand" -> print_string ("Nombre Incorrect -> Saisir un nombre entre 0 et 6 :\n"); let i= read_int() in createListCoul i;;
@@ -351,15 +350,21 @@ let liste_code_possible n lcoul = if (n=2) then (code_2 lcoul) else if (n=3) the
 
 
 		let tuple_to_string a = match a with
-			|Some((b,c)) -> ((string_of_int b)^" bien place, "^(string_of_int c)^" mal placé. ")
+			|Some((b,c)) -> ((string_of_int b)^" bien place, "^(string_of_int c)^" mal place. ")
 			|None -> "";;
 
 		let reponse_correcte n = function
 			|Some((m,0)) when m=(n+0) -> true
 			|_-> false;;
+
+let rec print_list = function
+	|[] -> ()
+	|(Couleur(h))::t -> print_string h ; print_string " "; print_list t;;
 	
 	
-		let rec saisie_code couleur_probable taille_code = print_string("Entrer une proposition de code : "); 
+		let rec saisie_code couleur_probable taille_code = 
+print_string "Liste de couleur possible: "; print_list couleur_probable; print_string "\n";
+print_string("Entrer une proposition de code : "); 
 		let s=read_line () in let codeEntre=(code_of_string s couleur_probable) in 
 		if ((codeEntre)=None) then (print_string("Saisie incorrecte (Tout écrire en minuscule ou couleurs non définies) : "); saisie_code couleur_probable taille_code)
  		else if ((List.length (code_of_string_bis s))>taille_code)  then (print_string("Saisie incorrecte (Code trop grand) : "); saisie_code couleur_probable taille_code)
