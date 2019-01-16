@@ -320,7 +320,7 @@ let liste_code_possible n lcoul = if (n=2) then (code_2 lcoul) else if (n=3) the
 			| h :: t -> h :: supprime_un a t;;
 
 
-		let param_couleur_bis n = 
+		let createListCoul_bis n = 
 			let rec aux acc n coul = match n with
 				| 0 -> acc
 				| a when a<7 -> let i = (Random.int(List.length(coul))) in aux ((List.nth (coul) i)::acc) (n-1) (supprime_un (List.nth (coul) i) coul)
