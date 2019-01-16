@@ -234,7 +234,7 @@ un entier negatif si [c1] est strictement plus petit que [c2]
 *@return 
 *)
 
-		val alternance : int -> t -> int -> int -> int -> bool -> int*int
+		val alternance : string -> int -> t -> int -> int -> int -> bool -> int*int
 
 
 		(** Détermine qui a gagné 
@@ -244,7 +244,7 @@ un entier negatif si [c1] est strictement plus petit que [c2]
 *@param vrai ou faux si
 *@return 
 *)
-		val victoire : string -> int -> t -> int -> int -> bool -> unit 
+		val victoire : string -> int -> t -> int -> int -> int -> bool -> unit 
 
 
 
@@ -261,6 +261,10 @@ struct
 		let nombre_pions = 4;;
 
 		let couleurs_possibles = [Couleur("bleu") ; Couleur("rouge") ; Couleur("vert") ; Couleur("jaune"); Couleur("noir") ; Couleur("orange")] ;;
+
+		let clscreen b = print_string "";;
+
+		
 
 		let compare c1 c2 = if (c1:t) = (c2:t) then 0
 					else if (c1:t) > (c2:t) then 1
@@ -330,10 +334,7 @@ struct
 		let reponse_correcte n = function
 			|Some((m,0)) when m=(n+0) -> true
 			|_-> false;;
-
-
-
-		
+	
 	
 		let rec saisie_code couleur_probable taille_code = print_string("Entrer une proposition de code : "); 
 		let s=read_line () in let codeEntre=(code_of_string s couleur_probable) in 
@@ -341,6 +342,11 @@ struct
  		else if ((List.length (code_of_string_bis s))>taille_code)  then (print_string("Saisie incorrecte (Code trop grand) : "); saisie_code couleur_probable taille_code)
 		else if ((List.length (code_of_string_bis s))<taille_code) then (print_string("Saisie incorrecte (Code trop petit) : "); saisie_code couleur_probable taille_code)
 		else List.rev (code_of_string_bis s);;
+
+let rec print_list = function
+	|[] -> ()
+	|(Couleur(h))::t -> print_string h ; print_string " "; print_list t;;
+
 
 
 	let decision_final tentativeMax taille_code couleur_probable code_secret =   
@@ -368,7 +374,6 @@ let generation_code_secret taillecode couleur_probable =
 
 
  
-	end;;
 	
 let joueur_cherche tentativeMax taille_code couleur_prob = let codeOrdi = generation_code_secret taille_code couleur_prob in decision_final tentativeMax taille_code couleur_prob codeOrdi;;
 
@@ -414,7 +419,7 @@ print_string "Liste de couleur possible: "; print_list couleur_prob; print_strin
 let entree = saisie_code couleur_prob taille_code in let rappel = ref "\n" in
 	for i = 0 to (tentativeMax-1) do
 	let ()=clscreen (Sys.command "clear") in
-		let codeOrdi = generation_codeSec taille_code couleur_prob in let ()= print_string "Code ordi : " in let ()=print_list codeOrdi in let ()=print_string "\n" in
+		let codeOrdi = generation_code_secret taille_code couleur_prob in let ()= print_string "Code ordi : " in let ()=print_list codeOrdi in let ()=print_string "\n" in
 			let rep_manu = saisie_rep_manuel 0 in
 				let ()= (rappel := !rappel^"\n"^(string_of_code (List.rev codeOrdi))) in
 					match (rep_manu = (reponse entree codeOrdi)) with 
@@ -458,11 +463,23 @@ let rec alternance_bis nom_joueur nbPartie couleur_prob taille_code tentativeMax
 					alternance_bis nom_joueur (nbPartie-1) couleur_prob taille_code tentativeMax joueur autom (x,y+1)
 				 else alternance_bis nom_joueur (nbPartie-1) couleur_prob taille_code tentativeMax joueur autom (x+1,y)) in alternance_bis nom_joueur nbPartie couleur_prob taille_code tentativeMax joueur autom (0,0);;
 
-let victoire nom_joueur nbPartie couleur_pos tailleCode tentativeMax joueur autom = let result = alternance1 nom_joueur nbPartie couleur_pos tailleCode tentativeMax joueur autom in match result with
+let victoire nom_joueur nbPartie couleur_prob tailleCode tentativeMax joueur autom = let result = alternance nom_joueur nbPartie couleur_prob tailleCode tentativeMax joueur autom in match result with
 	|(a,b) when a>b -> print_string (nom_joueur^" gagne")
 	|(a,b) when a=b -> print_string "Egalite"
 	|_->print_string "Ordi gagne";;
 		
+
+let mastermind nom_joueur tentativeMax nbPartie autom = let ()=clscreen (Sys.command "clear") in 
+	let npart = est_toujours_pair nbPartie in 
+		let ()=print_string "Combien de couleur souhaitez vous ? (max 6) " in 
+			let nbCouleur = read_int () in 
+				let couleur_prob = createListCoul nbCouleur in 
+					let () = print_string "Quelle taille de code ? (max 4) " in 
+						let tailleCode=read_int () in 
+							let joueur=Random.int 2 
+								in victoire nom_joueur npart couleur_prob tailleCode tentativeMax joueur autom;;
+
+end;;
 
 
 
