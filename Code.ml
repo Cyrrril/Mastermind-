@@ -44,6 +44,12 @@ un entier negatif si [c1] est strictement plus petit que [c2]
 *)
 		val code_of_string : string -> t -> t option
 
+		(** 
+
+
+*)
+		val liste_code_possible : int -> 'a list -> 'a list list 
+
 
 		(** supprimer un élément d'une liste (fait en td)
 *@param a, un élément de n'importe quel type
@@ -289,6 +295,23 @@ struct
 			if (((code_of_string_bis s)<>[] ) && (contient couleur_probable (code_of_string_bis s)))
 				then Some(code_of_string_bis s)
 			else None;;
+
+
+		let code_2 l1 = 
+   			let res = List.fold_left (fun acc x -> List.fold_left (fun acc 					y -> (x::y::[]) :: acc) acc l1) [] l1 in List.rev res;;
+
+		let code_3 l1 =
+	 		let res = List.fold_left (fun acc x ->
+     				List.fold_left (fun acc y -> List.fold_left (fun acc z -> (x::y::z::[]) :: acc) acc l1) acc l1) [] l1 in List.rev res;;
+
+		let code_4 l1 =
+			let res = List.fold_left (fun acc x ->
+     				List.fold_left (fun acc y -> 
+					List.fold_left (fun acc z ->List.fold_left (fun acc t -> (x::y::z::t::[]) :: acc) acc l1) acc l1) acc l1) [] l1  in List.rev res;;
+
+let liste_code_possible n lcoul = if (n=2) then (code_2 lcoul) else if (n=3) then (code_3 lcoul) else (code_4 lcoul);;
+
+
 
 		let rec supprime_un a l = match l with
 			| [] -> l
