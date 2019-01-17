@@ -30,9 +30,9 @@ un entier negatif si [c1] est strictement plus petit que [c2]
 *)		
 		val string_of_code : t -> string
 
-		(** contient
-*@param l1,
-*@param l2,
+		(** vérifie si la 1er liste est contenue dans la 2e
+*@param l1, une liste de pions
+*@param l2, une liste de pions
 *@return vrai ou faux selon si la liste 2 contient des élements de la liste 1
 *)		
 		val contient : t -> t -> bool
@@ -44,12 +44,12 @@ un entier negatif si [c1] est strictement plus petit que [c2]
 *)
 		val code_of_string : string -> t -> t option
 
-		(** 
-
-
+		(** donne la liste de tous les codes possibles
+*@param n, un entier
+*@param lcoul, une liste de couleur
+*@return liste de tous les codes possibles
 *)
 		val liste_code_possible : int -> 'a list -> 'a list list 
-
 
 		(** supprimer un élément d'une liste (fait en td)
 *@param a, un élément de n'importe quel type
@@ -82,23 +82,23 @@ un entier negatif si [c1] est strictement plus petit que [c2]
 *)
 		val liste_reponse : int -> (int * int) list
 
-		(** créer une liste de couples
-*@param une liste de n'importe quel type 
-*@param une liste de n'importe quel type 
+		(** donner les bonne réponse
+*@param c1 ,une liste de n'importe quel type 
+*@param c2 ,une liste de n'importe quel type 
 *@return une liste de couples contenant les couples des valeurs identiques entre les 2 listes 
 *)
 		val bonne_reponse : 'a list -> 'a list -> ('a * 'a) list
 
 		(** créer une liste de couples
-*@param une liste de n'importe quel type 
-*@param une liste de n'importe quel type 
+*@param c1 ,une liste de n'importe quel type 
+*@param c2 ,une liste de n'importe quel type 
 *@return une liste de couples contenant les couples de valeurs différentes entre les 2 listes
 *)	
 		val mauvaise_reponse : 'a list -> 'a list -> ('a * 'a) list
 
 		(** Calcule la reponse d'un code par rapport au code cache
-*@param code le code propose
-*@param vrai_code le code cache
+*@param c1, le code propose
+*@param c2, le code cache
 *@return un couple (nombre de pions bien places, nombre de pions mal places)
 [None] si la reponse ne peut etre calculee
 *)
@@ -124,107 +124,104 @@ un entier negatif si [c1] est strictement plus petit que [c2]
 *)
 		val saisie_code : t -> int -> pion list
 
-		(** récupère le code saisie par l'utilisateur
+		(** donne le resultat a la fin de la manche
 *@param tentativeMax, un entier
 *@param taille_code, un entier
-*@param couleur_probable, une liste de couleur
-*@param code_secret, une liste de couleur
-*@return la liste de pion saise  
+*@param couleur_probable, une liste de pions
+*@param code_secret, une liste de pions
+*@return vrai ou faux selon si le joueur gagne ou pas
 *)
 		val decision_final : int -> int -> t -> t -> bool
 
 		(** Génère un code secret
 *@param taille_code, un entier
-*@param couleur_probable, un entier
-*@return vrai ou faux si
+*@param couleur_probable, une liste de type générique
+*@return une liste de pions (couleur)
 *) 
 		val generation_code_secret : int -> 'a list -> 'a list
 
-		(** Le joueur devine le code
-*@param un entier
-*@param une liste de couleur
-*@param un entier
-*@return vrai ou faux si
+		(** Le joueur cherche à deviné le code
+*@param tentativeMax, un entier
+*@param taille_code, un entier
+*@param couleur_prob, une liste de couleur
+*@return vrai ou faux selon si le joueur trouve le code ou non
 *)
 		
 		val joueur_cherche : int -> int -> t -> bool
 
 		(** Réponse automatique du joueur (pas de vérification)
-*@param type générique
-*@return un couple d'entier
+*@param taille_code ,un entier
+*@param couleur_prob ,une liste de pions
+*@param tailleMax ,un entier
+*@return vrai si l'ordinateur a bien trouvé et faux si l'ordinateur n'a pas trouvé la reponse
 *)
-
-		
+	
 		val reponse_automatique_joueur : int -> t -> int -> bool
 
 		(** Le joueur saisie le nombre de pions bien placés et mal placés 
-*@param un pointeur sur le string
-*@param un entier 
-*@param un couple d'entier
-*@return 
+*@param n, un entier
+*@return un couple d'entier donnant le nombre de pions bien placé et mal placé
 *)
-
 		val saisie_rep_manuel : int -> (int*int) option
 
-		(** entrer 
-*@param entier
-*@param une liste de couleur
-*@param un entier
-*@return 
+		(** afficher le dernier couple bonne réponse/mauvaise réponse 
+*@param rappel, un pointeur sur un string
+*@param taille_code,un entier
+*@param rep_manu,un couple d'entier
+*@return un message (erreur ou fait terminer la partie)
 *)
 	
 		val bon_faux : string ref -> int -> (int*int) option -> unit
 
-		(** Réponse finale du joueur 
-*@param un entier
-*@return un entier
+		(** le joueur vérifie si l'IA a bien placé les pions
+*@param taille_code  ,un entier
+*@param couleur_prob ,une liste de pions
+*@param tentativeMAx ,un entier
+*@return vrai ou faux selon si le joueur a triché ou non
 *)
 
 		val reponse_manuel_joueur : int -> t -> int -> bool 
 
-		(** entrer 
-*@param une chaine de caractère
-*@param une liste de couleur
-*@param un entier
-*@param un entier
-*@param un type générique
-*@param un type générique
-*@return vrai ou faux
+		(** vérifie si une valeur est toujours pair
+*@param n ,un entier quelconque
+*@return un entier pair  
 *)
 
 		val est_toujours_pair : int  -> int
 
 
 		(** détermine qui commence de manière automatique 
-*@param une chaine de caractère
-*@param une liste de couleur
-*@param un entier
-*@param un entier
-*@param un type générique
-*@param un type générique
-*@return vrai ou faux
+*@param nom_joueur ,une chaine de caractère
+*@param couleur_prob ,une liste de couleur
+*@param taille_code ,un entier
+*@param tentativeMAx ,un entier
+*@param joueur ,un type générique
+*@param n ,un type générique
+*@return vrai ou faux selon si l'IA commence ou non
 *)
 
 		val qui_commence_auto : string -> t -> int -> int -> 'a -> 'a -> bool
 
 		(** détermine qui commence de manière manuel 
-*@param une chaine de caractère
-*@param une liste de couleur
-*@param un entier
-*@param un entier
-*@param un type générique
-*@param un type générique
-*@return vrai ou faux
+*@param nom_joueur ,une chaine de caractère
+*@param couleur_prob ,une liste de couleur
+*@param taille_code ,un entier
+*@param tentativeMAx ,un entier
+*@param joueur ,un type générique
+*@param n ,un type générique
+*@return vrai ou faux selon si selon si l'IA commence ou non
 *)
 		val qui_commence_manuel : string -> t -> int -> int -> 'a -> 'a -> bool
 
-		(** entrer 
-*@param un entier
-*@param une liste de couleur
-*@param un entier
-*@param un entier
-*@param vrai ou faux si 
-*@return un couple d'entier
+		(** appeler les 2 fonctions ci dessus 
+*@param nom_joueur ,une chaine de caractère
+*@param couleur_prob ,une liste de couleur
+*@param taille_code ,un entier
+*@param tentativeMAx ,un entier
+*@param joueur ,un type générique
+*@param n ,un type générique
+*@param autom ,un booléen
+*@return vrai ou faux selon si selon si l'IA commence ou non
 *)
 
 		val qui_commence : string -> t -> int -> int -> 'a -> 'a  -> bool -> bool
@@ -235,25 +232,32 @@ un entier negatif si [c1] est strictement plus petit que [c2]
 *@param couleurProbable, une liste de couleur
 *@param taille_code, un entier
 *@param tentativeMax, un entier
-*@param joueur, vrai ou faux si
-*@param autom, 
-*@return 
+*@param joueur, un entier soit 0 soit 1
+*@param autom, un booléen
+*@return un couple d'entier
 *)
 
 		val alternance : string -> int -> t -> int -> int -> int -> bool -> int*int
 
-
 		(** Détermine qui a gagné 
-*@param une chaine de caractère
-*@param un entier
-*@param un entier
-*@param vrai ou faux si
-*@return 
+*@param nom_joueur ,une chaine de caractère
+*@param nbPartie ,un entier
+*@param couleur_prob ,une liste de pions
+*@param taille_code ,un entier
+*@param tentativeMax ,un entier
+*@param joueur ,un entier
+*@param autom ,un booléen
+*@return celui qui a gagné
 *)
 		val victoire : string -> int -> t -> int -> int -> int -> bool -> unit 
 
-
-
+		(** fonction qui fait tourner tous le jeu
+*@param nom_joueur , une chaine de caractère
+*@param tentativeMAx, un entier
+*@param nbPartie ,un entier
+*@param autom ,un booléen
+*@return fait fonctionner le jeu
+*)
 		val mastermind : string -> int -> int -> bool -> unit
 	end =
 
