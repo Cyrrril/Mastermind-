@@ -1,7 +1,5 @@
-#mastermind 
+MASTERMIND PROJET CPI2
 
-Anthony Jacquelin	
+Anthony Jacquelin
 Cyril Anandhan
 Kiman Oulebsir
-
-
