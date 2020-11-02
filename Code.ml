@@ -58,6 +58,15 @@ un entier negatif si [c1] est strictement plus petit que [c2]
 *)
 		val supprime_un : 'a -> 'a list -> 'a list
 
+		(** Donne la liste des pions placés
+*param code1, un code (liste de pions)
+*param code2, un code (liste de pions) 
+*return la liste couple bien placé des pions
+*)
+
+		val repBien_place : t -> t -> (int * int) * (pion * pion) list
+
+
 		(** créer une liste de n couleurs
 *@param n, un entier n entre 0 et 6 
 *@return une liste de n couleurs donné aléatoirement
@@ -310,6 +319,16 @@ struct
 				| h::k::t when a =k -> h::t
 				| h::t -> h :: supprime_un a t;;
 
+		let repBien_place code1 code2 = (List.fold_left (fun ((c,d),lst) (a,b) -> if (a=b) then ((c+1,d),(supprime_un (a,b) lst)) 
+													else ((c,d),lst)) ((0,0),(List.combine (code1 : t) (code2 : t))) (List.combine (code1 : t) (code2 : t)));;
+
+		
+		let repBon_Mplace ((c,d),l) = let (code1,code2) = List.split l in
+			 let rec aux acc (l1,l2) = function
+						|[]->acc
+						|h::t -> let (a,b)=h in let (acc1,acc2)=acc in aux (if (List.mem b (l1 : t)) then (acc1,acc2+1)
+									 else (acc1,acc2)) ((supprime_un b l1),(supprime_un b l1)) t in aux (c,d) (code1,code2) l;;
+		
 		let createListCoul_bis n = 
 			let rec aux acc n coul = match n with
 					|0 -> acc
@@ -333,9 +352,7 @@ struct
 
 		let mauvaise_reponse c1 c2 = List.filter (fun (a,b) -> a<>b) (List.combine c1 c2);;
 
-		let reponse c1 c2 = try (Some (List.length (bonne_reponse (c1 : t) (c2 : t)),List.length (mauvaise_reponse (c1 : t) (c2 : t)))) with
-							| Invalid_argument "List.combine" -> None;;
-
+		let reponse code1 code2 =  let a= repBien_place code1 code2 in Some(repBon_Mplace a);;
 
 		let tuple_to_string a = match a with
 				|Some((b,c)) -> ((string_of_int b)^" bien place, "^(string_of_int c)^" mal place. ")
@@ -487,8 +504,4 @@ end;;
 
 
 
-let saisie_rep_manue2 n= let ()=print_string "Verifiez le code: \n(Nb bon et bien placé) \n" in 
-			let a=read_int () in 
-				let ()=print_string "(Nb bon mais mal placé) \n" in 
-					let b=read_int () in 
-						let rep_manu=Some (a,b) in rep_manu;;
+
